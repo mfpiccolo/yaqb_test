@@ -1,0 +1,9 @@
+[package]
+name = "yaqb_test"
+version = "0.1.0"
+authors = ["Mike Piccolo <mfpiccolo@gmail.com>"]
+
+[dependencies]
+yaqb = { path = "../yaqb" }
+libc = "0.2"
+dotenv = "0.4.0"
