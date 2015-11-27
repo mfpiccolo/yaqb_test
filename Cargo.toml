@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Mike Piccolo <mfpiccolo@gmail.com>"]
 
 [dependencies]
-yaqb = { path = "../yaqb/yaqb" }
+yaqb = { git = "https://github.com/sgrif/yaqb" }
 yaqb_codegen = { git = "https://github.com/sgrif/yaqb" }
 libc = "0.2"
 dotenv = "0.4.0"

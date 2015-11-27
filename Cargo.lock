@@ -9,7 +9,7 @@ dependencies = [
  "serde 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_macros 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "yaqb 0.1.0",
+ "yaqb 0.1.0 (git+https://github.com/sgrif/yaqb)",
  "yaqb_codegen 0.1.0 (git+https://github.com/sgrif/yaqb)",
 ]
 
@@ -390,6 +390,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "yaqb"
 version = "0.1.0"
+source = "git+https://github.com/sgrif/yaqb#0705b1169ed9682a525090287655b8dfb31a8af1"
 dependencies = [
  "byteorder 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
