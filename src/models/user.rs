@@ -37,8 +37,7 @@ impl User {
   }
 
   pub fn insert(new_users: Vec<NewUser>) {
-
-    User::conn().insert(&self::users::table, new_users).unwrap().collect();
+    User::conn().insert_returning_count(&self::users::table, &new_users);
   }
 
   pub fn to_json(&self) -> String {
@@ -75,5 +74,4 @@ changeset! {
     email -> Option<String>,
   }
 }
-
 
