@@ -1,7 +1,9 @@
 extern crate serde;
 extern crate serde_json;
+use rustc_serialize::json;
 
 use yaqb::*;
+use models::post::{posts, Post};
 
 table! {
   users {
@@ -11,7 +13,9 @@ table! {
   }
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Eq, Debug, Clone, Queriable)]
+one_to_many!(users (User) -> posts (Post) on (user_id = id));
+
+#[derive(Serialize, Deserialize, PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
 pub struct User {
   pub id: i32,
   pub name: String,
@@ -44,6 +48,10 @@ impl User {
     serde_json::to_string(&self).unwrap()
   }
 
+  pub fn posts_vec(&self) -> Vec<Post> {
+    self.posts().load(&User::conn()).unwrap().collect()
+  }
+
 }
 
 #[derive(RustcDecodable, Serialize, Deserialize, PartialEq, Eq, Debug, Clone, Queriable)]
@@ -59,5 +67,16 @@ impl NewUser {
       name: name.to_string(),
       email: email.map(|s| s.to_string()),
     }
+  }
+}
+
+pub trait Jsonify {
+  fn to_json(&self) -> String;
+}
+
+impl Jsonify for Vec<Post> {
+  fn to_json(&self) -> String {
+    let vec_strings: Vec<String> = self.into_iter().map(|p| p.to_json()).collect();
+    json::encode(&vec_strings).unwrap()
   }
 }

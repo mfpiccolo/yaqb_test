@@ -20,7 +20,7 @@ use nickel::{Nickel,
 };
 
 mod models;
-use models::user::{User, NewUser};
+use models::user::{User, NewUser, Jsonify};
 use models::post::{Post, NewPost};
 use yaqb::*;
 
@@ -36,11 +36,16 @@ fn main() {
 
   let mut router = Nickel::router();
 
-
   // ****** User Routes
-  router.get("/users/:userid", middleware! { |request|
-    let user_id = request.param("userid").unwrap().parse::<i32>().unwrap();
+  router.get("/users/:user_id", middleware! { |request|
+    let user_id = get_user_id(request);
     User::find(user_id).unwrap().to_json()
+  });
+
+  router.get("/users/:user_id/posts", middleware! { |request|
+    let user_id = get_user_id(&request);
+    let user: User = User::find(user_id).unwrap();
+    user.posts_vec().to_json()
   });
 
   router.get("/users", middleware!(User::count().unwrap().to_string()));
@@ -54,8 +59,8 @@ fn main() {
   });
 
   // ****** Post Routes
-  router.get("/posts/:postid", middleware! { |request|
-    let post_id = request.param("postid").unwrap().parse::<i32>().unwrap();
+  router.get("/posts/:post_id", middleware! { |request|
+    let post_id = request.param("post_id").unwrap().parse::<i32>().unwrap();
     Post::find(post_id).unwrap().to_json()
   });
 
@@ -78,5 +83,9 @@ fn main() {
 fn logger<'mw>(req: &mut Request, res: Response<'mw>) -> MiddlewareResult<'mw> {
   println!("logging request from logger fn: {:?}", req.origin.uri);
   Ok(Continue(res))
+}
+
+fn get_user_id(request: &Request) -> i32 {
+  request.param("user_id").unwrap().parse::<i32>().unwrap()
 }
 
