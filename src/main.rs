@@ -1,4 +1,4 @@
-#![feature(custom_derive, plugin)]
+#![feature(custom_derive, plugin, custom_attribute)]
 #![plugin(serde_macros)]
 #![plugin(yaqb_codegen)]
 
@@ -21,6 +21,7 @@ use nickel::{Nickel,
 
 mod models;
 use models::user::{User, NewUser};
+use models::post::{Post, NewPost};
 use yaqb::*;
 
 fn main() {
@@ -35,19 +36,40 @@ fn main() {
 
   let mut router = Nickel::router();
 
+
+  // ****** User Routes
   router.get("/users/:userid", middleware! { |request|
     let user_id = request.param("userid").unwrap().parse::<i32>().unwrap();
     User::find(user_id).unwrap().to_json()
   });
+
   router.get("/users", middleware!(User::count().unwrap().to_string()));
 
   // try it with curl
-  // curl 'http://localhost:6767/users' -H 'Content-Type: application/json;charset=UTF-8'  --data-binary $'{ "name": "John","email": "Connor" }'
+  // curl 'http://localhost:6767/posts' -H 'Content-Type: application/json;charset=UTF-8'  --data-binary $'{ "name": "John","email": "Connor" }'
   router.post("/users", middleware! { |request, response|
     let new_user = request.json_as::<NewUser>().unwrap();
     let new_users = vec!(new_user);
-    User::insert(new_users);
+    let users: Vec<User> = User::insert(new_users);
   });
+
+  // ****** Post Routes
+  router.get("/posts/:postid", middleware! { |request|
+    let post_id = request.param("postid").unwrap().parse::<i32>().unwrap();
+    Post::find(post_id).unwrap().to_json()
+  });
+
+  router.get("/posts", middleware!(Post::count().unwrap().to_string()));
+
+  // try it with curl
+  // curl 'http://localhost:6767/posts' -H 'Content-Type: application/json;charset=UTF-8'  --data-binary $'{ "user_id": 1,"title": "YAQBFTW", "body": "Rust is cool and other interesting stuff" }'
+  router.post("/posts", middleware! { |request, response|
+    let new_post = request.json_as::<NewPost>().unwrap();
+    let new_posts = vec!(new_post);
+    let posts: Vec<Post> = Post::insert(new_posts);
+  });
+
+  // ******* End Routes
 
   server.utilize(router);
   server.listen("127.0.0.1:6767");
@@ -57,44 +79,4 @@ fn logger<'mw>(req: &mut Request, res: Response<'mw>) -> MiddlewareResult<'mw> {
   println!("logging request from logger fn: {:?}", req.origin.uri);
   Ok(Continue(res))
 }
-
-#[test]
-fn find_user_test() {
-  let conn = before_each();
-  let mike: User = User::find(1).unwrap();
-  assert_eq!("Mike", mike.name);
-  after_each(&conn);
-}
-
-#[test]
-fn count_users_test() {
-  let conn = before_each();
-  assert_eq!(Some(2), User::count());
-  after_each(&conn);
-}
-
-fn setup_users_table(conn: &Connection) {
-  conn.execute("CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR NOT NULL,
-    email VARCHAR
-  )").unwrap();
-}
-
-fn tear_down_users_table(conn: &Connection) {
-  conn.execute("DROP TABLE IF EXISTS users").unwrap();
-}
-
-fn before_each() -> Connection {
-  dotenv::dotenv().ok();
-  let conn = User::conn();
-  setup_users_table(&conn);
-  conn.execute("INSERT INTO users (name) VALUES ('Mike'), ('Joe')").unwrap();
-  User::conn()
-}
-
-fn after_each(conn: &Connection) {
-  // tear_down_users_table(&conn);
-}
-
 

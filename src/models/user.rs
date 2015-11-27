@@ -36,8 +36,8 @@ impl User {
     User::conn().query_one::<_, i64>(select_count.clone()).unwrap()
   }
 
-  pub fn insert(new_users: Vec<NewUser>) {
-    User::conn().insert_returning_count(&self::users::table, &new_users);
+  pub fn insert(new_users: Vec<NewUser>) -> Vec<User> {
+    User::conn().insert(&self::users::table, &new_users).unwrap().collect()
   }
 
   pub fn to_json(&self) -> String {
@@ -47,6 +47,7 @@ impl User {
 }
 
 #[derive(RustcDecodable, Serialize, Deserialize, PartialEq, Eq, Debug, Clone, Queriable)]
+#[insertable_into(users)]
 pub struct NewUser {
   pub name: String,
   pub email: Option<String>,
@@ -60,18 +61,3 @@ impl NewUser {
     }
   }
 }
-
-insertable! {
-  NewUser => users {
-    name -> String,
-    email -> Option<String>,
-  }
-}
-
-changeset! {
-  NewUser => users {
-    name -> String,
-    email -> Option<String>,
-  }
-}
-

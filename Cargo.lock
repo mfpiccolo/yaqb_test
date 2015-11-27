@@ -390,7 +390,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "yaqb"
 version = "0.1.0"
-source = "git+https://github.com/sgrif/yaqb#0705b1169ed9682a525090287655b8dfb31a8af1"
+source = "git+https://github.com/sgrif/yaqb#f1def40a024c2940555314bd875ec0a0f84d7f25"
 dependencies = [
  "byteorder 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -400,7 +400,7 @@ dependencies = [
 [[package]]
 name = "yaqb_codegen"
 version = "0.1.0"
-source = "git+https://github.com/sgrif/yaqb#0705b1169ed9682a525090287655b8dfb31a8af1"
+source = "git+https://github.com/sgrif/yaqb#f1def40a024c2940555314bd875ec0a0f84d7f25"
 dependencies = [
  "aster 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "quasi 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
