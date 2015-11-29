@@ -9,7 +9,4 @@ yaqb_codegen = { git = "https://github.com/sgrif/yaqb" }
 libc = "0.2"
 dotenv = "0.4.0"
 nickel = "*"
-serde = "*"
-serde_json = "*"
-serde_macros = "*"
 rustc-serialize = "*"

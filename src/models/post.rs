@@ -1,7 +1,5 @@
-extern crate serde;
-extern crate serde_json;
-
 use yaqb::*;
+use rustc_serialize::json;
 
 table! {
   posts {
@@ -12,7 +10,8 @@ table! {
   }
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Eq, Debug, Clone, Queriable)]
+#[derive(Serialize, Deserialize, PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
+#[belongs_to(user)]
 pub struct Post {
   pub id: i32,
   pub user_id: i32,
@@ -43,7 +42,7 @@ impl Post {
   }
 
   pub fn to_json(&self) -> String {
-    serde_json::to_string(&self).unwrap()
+    json::encode(self).unwrap()
   }
 
   pub fn new_post(&self, title: &str, body: Option<&str>) -> NewPost {
@@ -54,6 +53,7 @@ impl Post {
 
 #[derive(RustcDecodable, Serialize, Deserialize, PartialEq, Eq, Debug, Clone, Queriable)]
 #[insertable_into(posts)]
+#[changeset_for(posts)]
 pub struct NewPost {
   pub user_id: i32,
   pub title: String,
@@ -69,4 +69,3 @@ impl NewPost {
     }
   }
 }
-

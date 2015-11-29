@@ -1,12 +1,9 @@
 #![feature(custom_derive, plugin, custom_attribute)]
-#![plugin(serde_macros)]
 #![plugin(yaqb_codegen)]
 
 #[macro_use] extern crate yaqb;
 #[macro_use] extern crate nickel;
 extern crate dotenv;
-extern crate serde;
-extern crate serde_json;
 extern crate rustc_serialize;
 use rustc_serialize::json;
 
