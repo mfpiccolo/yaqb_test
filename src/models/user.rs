@@ -1,6 +1,8 @@
 use yaqb::*;
 use rustc_serialize::json;
 use models::post::{ posts, Post };
+use self::users::dsl::*;
+use yaqb::query_builder::*;
 
 table! {
   users {
@@ -27,17 +29,17 @@ impl User {
     Connection::establish(&connection_url).unwrap()
   }
 
-  pub fn find(id: i32) -> Option<User> {
-    User::conn().find(self::users::table, id).unwrap()
+  pub fn find(_id: i32) -> Option<User> {
+    User::conn().find(users, _id).unwrap()
   }
 
   pub fn count() -> Option<i64> {
-    let select_count = users::table.select_sql::<types::BigInt>("COUNT(*)");
+    let select_count = users.select_sql::<types::BigInt>("COUNT(*)");
     User::conn().query_one::<_, i64>(select_count.clone()).unwrap()
   }
 
   pub fn insert(new_users: Vec<NewUser>) -> Vec<User> {
-    User::conn().insert(&self::users::table, &new_users).unwrap().collect()
+    User::conn().insert(&users, &new_users).unwrap().collect()
   }
 
   pub fn to_json(&self) -> String {
@@ -48,21 +50,47 @@ impl User {
     Post::belonging_to(self).load(&User::conn()).unwrap().collect()
   }
 
+  pub fn update(_id: i32, changed_user: NewUser) {
+    let command = update(users::table.filter(id.eq(_id))).set(changed_user);
+    User::conn().execute_returning_count(&command).unwrap();
+  }
+
 }
 
 #[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable)]
 #[insertable_into(users)]
-#[changeset_for(users)]
 pub struct NewUser {
   pub name: String,
   pub email: Option<String>,
 }
 
+impl AsChangeset for NewUser {
+    type Changeset = Vec<Box<Changeset<Target=users::table>>>;
+
+    fn as_changeset(self) -> Self::Changeset {
+        let mut changes: Vec<Box<Changeset<Target=users::table>>> = Vec::new();
+
+        if let _name = self.name {
+            changes.push(Box::new(
+                users::name.eq(_name).as_changeset()
+            ))
+        }
+
+        if let Some(_email) = self.email {
+            changes.push(Box::new(
+                users::email.eq(_email).as_changeset()
+            ))
+        }
+
+        changes
+    }
+}
+
 impl NewUser {
-  pub fn new(name: &str, email: Option<&str>) -> Self {
+  pub fn new(_name: &str, _email: Option<&str>) -> Self {
     NewUser {
-      name: name.to_string(),
-      email: email.map(|s| s.to_string()),
+      name: _name.to_string(),
+      email: _email.map(|s| s.to_string()),
     }
   }
 }

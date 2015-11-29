@@ -45,6 +45,12 @@ fn main() {
     user.posts_vec().to_json()
   });
 
+  router.patch("/users/:user_id", middleware! { |request, response|
+    let user_id = get_user_id(request);
+    let changed_user = request.json_as::<NewUser>().unwrap();
+    User::update(user_id, changed_user);
+  });
+
   router.get("/users", middleware!(User::count().unwrap().to_string()));
 
   // try it with curl
