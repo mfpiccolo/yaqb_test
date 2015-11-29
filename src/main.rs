@@ -1,7 +1,7 @@
 #![feature(custom_derive, plugin, custom_attribute)]
-#![plugin(yaqb_codegen)]
+#![plugin(diesel_codegen)]
 
-#[macro_use] extern crate yaqb;
+#[macro_use] extern crate diesel;
 #[macro_use] extern crate nickel;
 extern crate dotenv;
 extern crate rustc_serialize;
@@ -22,7 +22,7 @@ mod jsonify;
 use jsonify::Jsonify;
 use models::user::{User, NewUser};
 use models::post::{Post, NewPost};
-use yaqb::*;
+use diesel ::*;
 
 fn main() {
   dotenv::dotenv().ok();
@@ -77,7 +77,7 @@ fn main() {
   router.get("/posts", middleware!(Post::count().unwrap().to_string()));
 
   // try it with curl
-  // curl --request POST 'http://localhost:6767/posts' -H 'Content-Type: application/json;charset=UTF-8'  --data-binary $'{ "user_id": 1,"title": "YAQBFTW", "body": "Rust is cool and other interesting stuff" }'
+  // curl --request POST 'http://localhost:6767/posts' -H 'Content-Type: application/json;charset=UTF-8'  --data-binary $'{ "user_id": 1,"title": "diesel FTW", "body": "Rust is cool and other interesting stuff" }'
   router.post("/posts", middleware! { |request, response|
     let new_post = request.json_as::<NewPost>().unwrap();
     let new_posts = vec!(new_post);

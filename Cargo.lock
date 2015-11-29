@@ -2,12 +2,12 @@
 name = "yaqb_test"
 version = "0.1.0"
 dependencies = [
+ "diesel 0.1.0 (git+https://github.com/sgrif/diesel)",
+ "diesel_codegen 0.1.0 (git+https://github.com/sgrif/diesel)",
  "dotenv 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nickel 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
- "yaqb 0.1.0 (git+https://github.com/sgrif/yaqb)",
- "yaqb_codegen 0.1.0 (git+https://github.com/sgrif/yaqb)",
 ]
 
 [[package]]
@@ -44,6 +44,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "time 0.1.34 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.2.38 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "diesel"
+version = "0.1.0"
+source = "git+https://github.com/sgrif/diesel#f081727eafdcef2fe19106789980419c46570696"
+dependencies = [
+ "byteorder 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pq-sys 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "diesel_codegen"
+version = "0.1.0"
+source = "git+https://github.com/sgrif/diesel#f081727eafdcef2fe19106789980419c46570696"
+dependencies = [
+ "aster 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "quasi 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "quasi_macros 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -221,18 +241,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "quasi_codegen"
-version = "0.3.8"
-source = "git+https://github.com/sgrif/quasi.git#31d3254d098cea3398c6b434cad3cf518b481242"
+version = "0.3.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "aster 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "quasi_macros"
-version = "0.3.8"
-source = "git+https://github.com/sgrif/quasi.git#31d3254d098cea3398c6b434cad3cf518b481242"
+version = "0.3.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "quasi_codegen 0.3.8 (git+https://github.com/sgrif/quasi.git)",
+ "quasi_codegen 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -356,24 +376,4 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "winapi-build"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "yaqb"
-version = "0.1.0"
-source = "git+https://github.com/sgrif/yaqb#9abab952d6a42661299d0bd2338b0b988eb91de0"
-dependencies = [
- "byteorder 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "pq-sys 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "yaqb_codegen"
-version = "0.1.0"
-source = "git+https://github.com/sgrif/yaqb#9abab952d6a42661299d0bd2338b0b988eb91de0"
-dependencies = [
- "aster 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "quasi 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
- "quasi_macros 0.3.8 (git+https://github.com/sgrif/quasi.git)",
-]
 

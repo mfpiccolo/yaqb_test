@@ -1,8 +1,8 @@
-use yaqb::*;
+use diesel::*;
 use rustc_serialize::json;
 use models::post::{ posts, Post };
 use self::users::dsl::*;
-use yaqb::query_builder::*;
+use diesel::query_builder::*;
 use jsonify::Jsonify;
 
 table! {

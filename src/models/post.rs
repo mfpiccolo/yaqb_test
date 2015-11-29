@@ -1,4 +1,4 @@
-use yaqb::*;
+use diesel::*;
 use rustc_serialize::json;
 use models::user::{ users, User };
 use self::posts::dsl::*;

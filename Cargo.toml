@@ -4,8 +4,8 @@ version = "0.1.0"
 authors = ["Mike Piccolo <mfpiccolo@gmail.com>"]
 
 [dependencies]
-yaqb = { git = "https://github.com/sgrif/yaqb" }
-yaqb_codegen = { git = "https://github.com/sgrif/yaqb", version = "^0.1.0", default-features = false, features = ["nightly"] }
+diesel = { git = "https://github.com/sgrif/diesel" }
+diesel_codegen = { git = "https://github.com/sgrif/diesel", version = "^0.1.0", default-features = false, features = ["nightly"] }
 libc = "0.2"
 dotenv = "0.4.0"
 nickel = "*"
