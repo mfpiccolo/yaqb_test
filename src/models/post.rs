@@ -1,6 +1,7 @@
 use yaqb::*;
 use rustc_serialize::json;
 use models::user::{ users, User };
+use self::posts::dsl::*;
 
 table! {
   posts {
@@ -29,25 +30,25 @@ impl Post {
     Connection::establish(&connection_url).unwrap()
   }
 
-  pub fn find(id: i32) -> Option<Post> {
-    Post::conn().find(self::posts::table, id).unwrap()
+  pub fn find(_id: i32) -> Option<Post> {
+    Post::conn().find(posts, _id).unwrap()
   }
 
   pub fn count() -> Option<i64> {
-    let select_count = posts::table.select_sql::<types::BigInt>("COUNT(*)");
+    let select_count = posts.select_sql::<types::BigInt>("COUNT(*)");
     Post::conn().query_one::<_, i64>(select_count.clone()).unwrap()
   }
 
   pub fn insert(new_posts: Vec<NewPost>) -> Vec<Post> {
-    Post::conn().insert(&self::posts::table, &new_posts).unwrap().collect()
+    Post::conn().insert(&posts, &new_posts).unwrap().collect()
   }
 
   pub fn to_json(&self) -> String {
     json::encode(self).unwrap()
   }
 
-  pub fn new_post(&self, title: &str, body: Option<&str>) -> NewPost {
-    NewPost::new(self.id, title, body)
+  pub fn new_post(&self, _title: &str, _body: Option<&str>) -> NewPost {
+    NewPost::new(self.id, _title, _body)
   }
 
 }
@@ -62,11 +63,11 @@ pub struct NewPost {
 }
 
 impl NewPost {
-  pub fn new(user_id: i32, title: &str, body: Option<&str>) -> Self {
+  pub fn new(_user_id: i32, _title: &str, _body: Option<&str>) -> Self {
     NewPost {
-      user_id: user_id,
-      title: title.into(),
-      body: body.map(|b| b.into()),
+      user_id: _user_id,
+      title: _title.into(),
+      body: _body.map(|b| b.into()),
     }
   }
 }

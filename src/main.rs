@@ -45,7 +45,9 @@ fn main() {
     user.posts_vec().to_json()
   });
 
-  router.patch("/users/:user_id", middleware! { |request, response|
+  // try it with curl
+  // curl --request PATCH 'http://localhost:6767/users/1/posts' -H 'Content-Type: application/json;charset=UTF-8' --data-binary $'{ "name": "Change","email": "new@email.com" }'
+  router.patch("/users/:user_id/posts", middleware! { |request, response|
     let user_id = get_user_id(request);
     let changed_user = request.json_as::<NewUser>().unwrap();
     User::update(user_id, changed_user);
@@ -54,7 +56,7 @@ fn main() {
   router.get("/users", middleware!(User::count().unwrap().to_string()));
 
   // try it with curl
-  // curl 'http://localhost:6767/posts' -H 'Content-Type: application/json;charset=UTF-8'  --data-binary $'{ "name": "John","email": "Connor" }'
+  // curl --request POST 'http://localhost:6767/users' -H 'Content-Type: application/json;charset=UTF-8'  --data-binary $'{ "name": "Mike", "email": "mike@email.com" }'
   router.post("/users", middleware! { |request, response|
     let new_user = request.json_as::<NewUser>().unwrap();
     let new_users = vec!(new_user);
@@ -70,7 +72,7 @@ fn main() {
   router.get("/posts", middleware!(Post::count().unwrap().to_string()));
 
   // try it with curl
-  // curl 'http://localhost:6767/posts' -H 'Content-Type: application/json;charset=UTF-8'  --data-binary $'{ "user_id": 1,"title": "YAQBFTW", "body": "Rust is cool and other interesting stuff" }'
+  // curl --request POST 'http://localhost:6767/posts' -H 'Content-Type: application/json;charset=UTF-8'  --data-binary $'{ "user_id": 1,"title": "YAQBFTW", "body": "Rust is cool and other interesting stuff" }'
   router.post("/posts", middleware! { |request, response|
     let new_post = request.json_as::<NewPost>().unwrap();
     let new_posts = vec!(new_post);

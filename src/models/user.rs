@@ -13,7 +13,6 @@ table! {
 }
 
 #[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
-#[has_many(posts)]
 pub struct User {
   pub id: i32,
   pub name: String,
@@ -65,25 +64,24 @@ pub struct NewUser {
 }
 
 impl AsChangeset for NewUser {
-    type Changeset = Vec<Box<Changeset<Target=users::table>>>;
+  type Changeset = Vec<Box<Changeset<Target=users::table>>>;
 
-    fn as_changeset(self) -> Self::Changeset {
-        let mut changes: Vec<Box<Changeset<Target=users::table>>> = Vec::new();
+  fn as_changeset(self) -> Self::Changeset {
+    let mut changes: Vec<Box<Changeset<Target=users::table>>> = Vec::new();
 
-        if let _name = self.name {
-            changes.push(Box::new(
-                users::name.eq(_name).as_changeset()
-            ))
-        }
+    let _name = self.name;
+    changes.push(Box::new(
+        users::name.eq(_name).as_changeset()
+    ));
 
-        if let Some(_email) = self.email {
-            changes.push(Box::new(
-                users::email.eq(_email).as_changeset()
-            ))
-        }
-
-        changes
+    if let Some(_email) = self.email {
+      changes.push(Box::new(
+          users::email.eq(_email).as_changeset()
+      ))
     }
+
+    changes
+  }
 }
 
 impl NewUser {
