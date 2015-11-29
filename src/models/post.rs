@@ -2,6 +2,7 @@ use yaqb::*;
 use rustc_serialize::json;
 use models::user::{ users, User };
 use self::posts::dsl::*;
+use jsonify::Jsonify;
 
 table! {
   posts {
@@ -69,5 +70,12 @@ impl NewPost {
       title: _title.into(),
       body: _body.map(|b| b.into()),
     }
+  }
+}
+
+impl Jsonify for Vec<Post> {
+  fn to_json(&self) -> String {
+    let vec_strings: Vec<String> = self.into_iter().map(|p| p.to_json()).collect();
+    json::encode(&vec_strings).unwrap()
   }
 }

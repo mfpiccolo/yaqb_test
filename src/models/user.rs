@@ -3,6 +3,7 @@ use rustc_serialize::json;
 use models::post::{ posts, Post };
 use self::users::dsl::*;
 use yaqb::query_builder::*;
+use jsonify::Jsonify;
 
 table! {
   users {
@@ -49,9 +50,9 @@ impl User {
     Post::belonging_to(self).load(&User::conn()).unwrap().collect()
   }
 
-  pub fn update(_id: i32, changed_user: NewUser) {
+  pub fn update(_id: i32, changed_user: NewUser) -> User {
     let command = update(users::table.filter(id.eq(_id))).set(changed_user);
-    User::conn().execute_returning_count(&command).unwrap();
+    User::conn().query_one(command).unwrap().unwrap()
   }
 
 }
@@ -93,11 +94,7 @@ impl NewUser {
   }
 }
 
-pub trait Jsonify {
-  fn to_json(&self) -> String;
-}
-
-impl Jsonify for Vec<Post> {
+impl Jsonify for Vec<User> {
   fn to_json(&self) -> String {
     let vec_strings: Vec<String> = self.into_iter().map(|p| p.to_json()).collect();
     json::encode(&vec_strings).unwrap()

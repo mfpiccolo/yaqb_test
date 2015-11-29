@@ -17,7 +17,10 @@ use nickel::{Nickel,
 };
 
 mod models;
-use models::user::{User, NewUser, Jsonify};
+mod jsonify;
+
+use jsonify::Jsonify;
+use models::user::{User, NewUser};
 use models::post::{Post, NewPost};
 use yaqb::*;
 
@@ -50,7 +53,8 @@ fn main() {
   router.patch("/users/:user_id/posts", middleware! { |request, response|
     let user_id = get_user_id(request);
     let changed_user = request.json_as::<NewUser>().unwrap();
-    User::update(user_id, changed_user);
+    let user: User = User::update(user_id, changed_user);
+    user.to_json()
   });
 
   router.get("/users", middleware!(User::count().unwrap().to_string()));
@@ -61,6 +65,7 @@ fn main() {
     let new_user = request.json_as::<NewUser>().unwrap();
     let new_users = vec!(new_user);
     let users: Vec<User> = User::insert(new_users);
+    users.to_json()
   });
 
   // ****** Post Routes
