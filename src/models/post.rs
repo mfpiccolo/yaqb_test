@@ -1,5 +1,6 @@
 use yaqb::*;
 use rustc_serialize::json;
+use models::user::{ users, User };
 
 table! {
   posts {
@@ -10,7 +11,7 @@ table! {
   }
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
 #[belongs_to(user)]
 pub struct Post {
   pub id: i32,
@@ -51,7 +52,7 @@ impl Post {
 
 }
 
-#[derive(RustcDecodable, Serialize, Deserialize, PartialEq, Eq, Debug, Clone, Queriable)]
+#[derive(RustcDecodable, PartialEq, Eq, Debug, Clone, Queriable)]
 #[insertable_into(posts)]
 #[changeset_for(posts)]
 pub struct NewPost {

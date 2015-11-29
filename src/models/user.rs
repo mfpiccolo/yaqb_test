@@ -10,7 +10,7 @@ table! {
   }
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
 #[has_many(posts)]
 pub struct User {
   pub id: i32,
@@ -45,12 +45,12 @@ impl User {
   }
 
   pub fn posts_vec(&self) -> Vec<Post> {
-    Post::belonging_to(self).load(User::conn()).unwrap().collect()
+    Post::belonging_to(self).load(&User::conn()).unwrap().collect()
   }
 
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable)]
 #[insertable_into(users)]
 #[changeset_for(users)]
 pub struct NewUser {
