@@ -29,11 +29,11 @@ impl User {
     Connection::establish(&connection_url).unwrap()
   }
 
-  pub fn find(_id: i32) -> Option<User> {
+  pub fn find(_id: i32) -> User {
     User::conn().find(users, _id).unwrap()
   }
 
-  pub fn count() -> Option<i64> {
+  pub fn count() -> i64 {
     let select_count = users.select_sql::<types::BigInt>("COUNT(*)");
     User::conn().query_one::<_, i64>(select_count.clone()).unwrap()
   }
@@ -52,7 +52,7 @@ impl User {
 
   pub fn update(_id: i32, changed_user: NewUser) -> User {
     let command = update(users::table.filter(id.eq(_id))).set(changed_user);
-    User::conn().query_one(command).unwrap().unwrap()
+    User::conn().query_one(command).unwrap()
   }
 
 }

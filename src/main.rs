@@ -39,12 +39,12 @@ fn main() {
   // ****** User Routes
   router.get("/users/:user_id", middleware! { |request|
     let user_id = get_user_id(request);
-    User::find(user_id).unwrap().to_json()
+    User::find(user_id).to_json()
   });
 
   router.get("/users/:user_id/posts", middleware! { |request|
     let user_id = get_user_id(&request);
-    let user: User = User::find(user_id).unwrap();
+    let user: User = User::find(user_id);
     user.posts_vec().to_json()
   });
 
@@ -57,7 +57,7 @@ fn main() {
     user.to_json()
   });
 
-  router.get("/users", middleware!(User::count().unwrap().to_string()));
+  router.get("/users", middleware!(User::count().to_string()));
 
   // try it with curl
   // curl --request POST 'http://localhost:6767/users' -H 'Content-Type: application/json;charset=UTF-8'  --data-binary $'{ "name": "Mike", "email": "mike@email.com" }'
@@ -71,10 +71,10 @@ fn main() {
   // ****** Post Routes
   router.get("/posts/:post_id", middleware! { |request|
     let post_id = request.param("post_id").unwrap().parse::<i32>().unwrap();
-    Post::find(post_id).unwrap().to_json()
+    Post::find(post_id).to_json()
   });
 
-  router.get("/posts", middleware!(Post::count().unwrap().to_string()));
+  router.get("/posts", middleware!(Post::count().to_string()));
 
   // try it with curl
   // curl --request POST 'http://localhost:6767/posts' -H 'Content-Type: application/json;charset=UTF-8'  --data-binary $'{ "user_id": 1,"title": "diesel FTW", "body": "Rust is cool and other interesting stuff" }'

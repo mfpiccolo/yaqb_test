@@ -31,11 +31,11 @@ impl Post {
     Connection::establish(&connection_url).unwrap()
   }
 
-  pub fn find(_id: i32) -> Option<Post> {
+  pub fn find(_id: i32) -> Post {
     Post::conn().find(posts, _id).unwrap()
   }
 
-  pub fn count() -> Option<i64> {
+  pub fn count() -> i64 {
     let select_count = posts.select_sql::<types::BigInt>("COUNT(*)");
     Post::conn().query_one::<_, i64>(select_count.clone()).unwrap()
   }
