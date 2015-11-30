@@ -2,7 +2,6 @@ use diesel::*;
 use rustc_serialize::json;
 use models::user::{ users, User };
 use self::posts::dsl::*;
-use jsonify::Jsonify;
 
 table! {
   posts {
@@ -57,6 +56,7 @@ impl Post {
 #[derive(RustcDecodable, PartialEq, Eq, Debug, Clone, Queriable)]
 #[insertable_into(posts)]
 #[changeset_for(posts)]
+#[allow(dead_code)]
 pub struct NewPost {
   pub user_id: i32,
   pub title: String,
@@ -73,9 +73,3 @@ impl NewPost {
   }
 }
 
-impl Jsonify for Vec<Post> {
-  fn to_json(&self) -> String {
-    let vec_strings: Vec<String> = self.into_iter().map(|p| p.to_json()).collect();
-    json::encode(&vec_strings).unwrap()
-  }
-}

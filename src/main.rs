@@ -5,7 +5,6 @@
 #[macro_use] extern crate nickel;
 extern crate dotenv;
 extern crate rustc_serialize;
-use rustc_serialize::json;
 
 use nickel::{Nickel,
   HttpRouter,
@@ -19,9 +18,9 @@ use nickel::{Nickel,
 mod models;
 mod jsonify;
 
-use jsonify::Jsonify;
 use models::user::{User, NewUser};
 use models::post::{Post, NewPost};
+use jsonify::*;
 use diesel ::*;
 
 fn main() {
@@ -82,6 +81,7 @@ fn main() {
     let new_post = request.json_as::<NewPost>().unwrap();
     let new_posts = vec!(new_post);
     let posts: Vec<Post> = Post::insert(new_posts);
+    posts.to_json()
   });
 
   // ******* End Routes
