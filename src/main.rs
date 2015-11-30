@@ -1,10 +1,12 @@
-#![feature(custom_derive, plugin, custom_attribute)]
+#![feature(plugin, custom_derive, custom_attribute, custom_model)]
 #![plugin(diesel_codegen)]
+#![plugin(yaqb_model)]
 
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate nickel;
 extern crate dotenv;
 extern crate rustc_serialize;
+extern crate yaqb_model;
 
 use nickel::{Nickel,
   HttpRouter,
@@ -21,7 +23,7 @@ mod jsonify;
 use models::user::{User, NewUser};
 use models::post::{Post, NewPost};
 use jsonify::*;
-use diesel ::*;
+use diesel::*;
 
 fn main() {
   dotenv::dotenv().ok();

@@ -10,3 +10,4 @@ libc = "0.2"
 dotenv = "0.4.0"
 nickel = "*"
 rustc-serialize = "*"
+yaqb_model = { path = "../yaqb_model", default-features = false, features = ["nightly"] }

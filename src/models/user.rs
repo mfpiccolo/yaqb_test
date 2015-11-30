@@ -2,6 +2,7 @@ use diesel::*;
 use models::post::Post;
 use self::users::dsl::*;
 use diesel::query_builder::*;
+use yaqb_model::modelable::Modelable;
 
 table! {
   users {
@@ -11,7 +12,7 @@ table! {
   }
 }
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable, Modelable)]
 pub struct User {
   pub id: i32,
   pub name: String,
@@ -19,13 +20,6 @@ pub struct User {
 }
 
 impl User {
-
-  #[inline]
-  pub fn conn() -> Connection {
-    let connection_url = ::std::env::var("DATABASE_URL").ok()
-      .expect("DATABASE_URL must be set in order to run tests");
-    Connection::establish(&connection_url).unwrap()
-  }
 
   pub fn find(_id: i32) -> User {
     User::conn().find(users, _id).unwrap()
@@ -40,13 +34,13 @@ impl User {
     User::conn().insert(&users, &new_users).unwrap().collect()
   }
 
-  pub fn posts_vec(&self) -> Vec<Post> {
-    Post::belonging_to(self).load(&User::conn()).unwrap().collect()
-  }
-
   pub fn update(_id: i32, changed_user: NewUser) -> User {
     let command = update(users::table.filter(id.eq(_id))).set(changed_user);
     User::conn().query_one(command).unwrap()
+  }
+
+  pub fn posts_vec(&self) -> Vec<Post> {
+    Post::belonging_to(self).load(&User::conn()).unwrap().collect()
   }
 
 }

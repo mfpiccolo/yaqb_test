@@ -2,6 +2,7 @@ use diesel::*;
 use rustc_serialize::json;
 use models::user::{ users, User };
 use self::posts::dsl::*;
+use yaqb_model::modelable::Modelable;
 
 table! {
   posts {
@@ -12,7 +13,7 @@ table! {
   }
 }
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable, Modelable)]
 #[belongs_to(user)]
 pub struct Post {
   pub id: i32,
@@ -22,13 +23,6 @@ pub struct Post {
 }
 
 impl Post {
-
-  #[inline]
-  pub fn conn() -> Connection {
-    let connection_url = ::std::env::var("DATABASE_URL").ok()
-      .expect("DATABASE_URL must be set in order to run tests");
-    Connection::establish(&connection_url).unwrap()
-  }
 
   pub fn find(_id: i32) -> Post {
     Post::conn().find(posts, _id).unwrap()
@@ -41,10 +35,6 @@ impl Post {
 
   pub fn insert(new_posts: Vec<NewPost>) -> Vec<Post> {
     Post::conn().insert(&posts, &new_posts).unwrap().collect()
-  }
-
-  pub fn to_json(&self) -> String {
-    json::encode(self).unwrap()
   }
 
   pub fn new_post(&self, _title: &str, _body: Option<&str>) -> NewPost {

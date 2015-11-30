@@ -8,6 +8,7 @@ dependencies = [
  "libc 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nickel 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
+ "yaqb_model 0.1.0",
 ]
 
 [[package]]
