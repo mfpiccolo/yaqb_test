@@ -2,7 +2,7 @@ use diesel::*;
 use models::post::Post;
 use self::users::dsl::*;
 use diesel::query_builder::*;
-use yaqb_model::modelable::Modelable;
+use diesel_model::modelable::Modelable;
 
 table! {
   users {

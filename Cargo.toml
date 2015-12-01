@@ -1,5 +1,5 @@
 [package]
-name = "yaqb_test"
+name = "diesel_test"
 version = "0.1.0"
 authors = ["Mike Piccolo <mfpiccolo@gmail.com>"]
 
@@ -10,4 +10,4 @@ libc = "0.2"
 dotenv = "0.4.0"
 nickel = "*"
 rustc-serialize = "*"
-yaqb_model = { path = "../yaqb_model", default-features = false, features = ["nightly"] }
+diesel_model = { path = "../diesel_model", default-features = false, features = ["nightly"] }

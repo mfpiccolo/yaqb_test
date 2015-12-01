@@ -1,12 +1,12 @@
 #![feature(plugin, custom_derive, custom_attribute, custom_model)]
 #![plugin(diesel_codegen)]
-#![plugin(yaqb_model)]
+#![plugin(diesel_model)]
 
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate nickel;
 extern crate dotenv;
 extern crate rustc_serialize;
-extern crate yaqb_model;
+extern crate diesel_model;
 
 use nickel::{Nickel,
   HttpRouter,
