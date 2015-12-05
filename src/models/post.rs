@@ -1,17 +1,10 @@
 use diesel::*;
-use models::user::{ users, User };
+use models::user::{ User };
 use self::posts::dsl::*;
 
-table! {
-  posts {
-    id -> Serial,
-    user_id -> Integer,
-    title -> VarChar,
-    body -> Nullable<Text>,
-  }
-}
+infer_schema!(dotenv!("DATABASE_URL"));
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable, Modelable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
 #[belongs_to(user)]
 pub struct Post {
   pub id: i32,
@@ -51,6 +44,7 @@ impl Post {
 #[derive(RustcDecodable, PartialEq, Eq, Debug, Clone, Queriable)]
 #[insertable_into(posts)]
 #[changeset_for(posts)]
+#[allow(dead_code)]
 pub struct NewPost {
   pub user_id: i32,
   pub title: String,

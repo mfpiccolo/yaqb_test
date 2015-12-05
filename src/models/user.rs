@@ -5,7 +5,8 @@ use diesel::query_builder::*;
 
 infer_schema!(dotenv!("DATABASE_URL"));
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable, Modelable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable, RustcEncodable)]
+#[changeset_for(users)]
 pub struct User {
   pub id: i32,
   pub name: String,
@@ -34,11 +35,8 @@ impl User {
     User::conn().insert(&users, &new_users).unwrap().collect()
   }
 
-  pub fn update(_id: i32, changed_user: NewUser) -> User {
-    changed_user.save_changes(User::conn())
-
-    // let command = update(users::table.filter(id.eq(_id))).set(changed_user);
-    // User::conn().query_one(command).unwrap()
+  pub fn update(_id: i32, changed_user: User) -> User {
+    changed_user.save_changes(&User::conn()).ok().unwrap()
   }
 
   pub fn posts_vec(&self) -> Vec<Post> {
@@ -49,7 +47,6 @@ impl User {
 
 #[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable)]
 #[insertable_into(users)]
-#[changeset_for(users)]
 pub struct NewUser {
   name: String,
   email: Option<String>,

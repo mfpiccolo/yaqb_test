@@ -50,10 +50,10 @@ fn main() {
   });
 
   // try it with curl
-  // curl --request PATCH 'http://localhost:6767/users/1/posts' -H 'Content-Type: application/json;charset=UTF-8' --data-binary $'{ "name": "Change","email": "new@email.com" }'
-  router.patch("/users/:user_id/posts", middleware! { |request, response|
+  // curl --request PATCH 'http://localhost:6767/users/1' -H 'Content-Type: application/json;charset=UTF-8' --data-binary $'{ "name": "Change","email": "new@email.com" }'
+  router.patch("/users/:user_id", middleware! { |request, response|
     let user_id = get_user_id(request);
-    let changed_user = request.json_as::<NewUser>().unwrap();
+    let changed_user = request.json_as::<User>().unwrap();
     let user: User = User::update(user_id, changed_user);
     user.to_json()
   });
