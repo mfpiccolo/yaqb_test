@@ -1,12 +1,10 @@
-#![feature(plugin, custom_derive, custom_attribute, custom_model)]
-#![plugin(diesel_codegen)]
-#![plugin(diesel_model)]
+#![feature(plugin, custom_derive, custom_attribute)]
+#![plugin(diesel_codegen, dotenv_macros)]
 
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate nickel;
-extern crate dotenv;
+#[macro_use] extern crate dotenv;
 extern crate rustc_serialize;
-extern crate diesel_model;
 
 use nickel::{Nickel,
   HttpRouter,
@@ -24,6 +22,8 @@ use models::user::{User, NewUser};
 use models::post::{Post, NewPost};
 use jsonify::*;
 use diesel::*;
+pub use diesel::data_types::*;
+use std::time::*;
 
 fn main() {
   dotenv::dotenv().ok();

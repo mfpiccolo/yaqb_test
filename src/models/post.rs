@@ -1,8 +1,6 @@
 use diesel::*;
-use rustc_serialize::json;
 use models::user::{ users, User };
 use self::posts::dsl::*;
-use diesel_model::modelable::Modelable;
 
 table! {
   posts {
@@ -23,6 +21,13 @@ pub struct Post {
 }
 
 impl Post {
+
+  #[inline]
+  fn conn() -> Connection {
+    let connection_url = ::std::env::var("DATABASE_URL").ok()
+      .expect("DATABASE_URL must be set in order to run tests");
+    Connection::establish(&connection_url).unwrap()
+  }
 
   pub fn find(_id: i32) -> Post {
     Post::conn().find(posts, _id).unwrap()
@@ -46,7 +51,6 @@ impl Post {
 #[derive(RustcDecodable, PartialEq, Eq, Debug, Clone, Queriable)]
 #[insertable_into(posts)]
 #[changeset_for(posts)]
-#[allow(dead_code)]
 pub struct NewPost {
   pub user_id: i32,
   pub title: String,

@@ -2,15 +2,8 @@ use diesel::*;
 use models::post::Post;
 use self::users::dsl::*;
 use diesel::query_builder::*;
-use diesel_model::modelable::Modelable;
 
-table! {
-  users {
-    id -> Serial,
-    name -> VarChar,
-    email -> Nullable<VarChar>,
-  }
-}
+infer_schema!(dotenv!("DATABASE_URL"));
 
 #[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable, Modelable)]
 pub struct User {
@@ -20,6 +13,13 @@ pub struct User {
 }
 
 impl User {
+
+  #[inline]
+  fn conn() -> Connection {
+    let connection_url = ::std::env::var("DATABASE_URL").ok()
+      .expect("DATABASE_URL must be set in order to run tests");
+    Connection::establish(&connection_url).unwrap()
+  }
 
   pub fn find(_id: i32) -> User {
     User::conn().find(users, _id).unwrap()
@@ -35,8 +35,10 @@ impl User {
   }
 
   pub fn update(_id: i32, changed_user: NewUser) -> User {
-    let command = update(users::table.filter(id.eq(_id))).set(changed_user);
-    User::conn().query_one(command).unwrap()
+    changed_user.save_changes(User::conn())
+
+    // let command = update(users::table.filter(id.eq(_id))).set(changed_user);
+    // User::conn().query_one(command).unwrap()
   }
 
   pub fn posts_vec(&self) -> Vec<Post> {
@@ -47,39 +49,8 @@ impl User {
 
 #[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable)]
 #[insertable_into(users)]
-#[allow(dead_code)]
+#[changeset_for(users)]
 pub struct NewUser {
-  pub name: String,
-  pub email: Option<String>,
+  name: String,
+  email: Option<String>,
 }
-
-impl AsChangeset for NewUser {
-  type Changeset = Vec<Box<Changeset<Target=users::table>>>;
-
-  fn as_changeset(self) -> Self::Changeset {
-    let mut changes: Vec<Box<Changeset<Target=users::table>>> = Vec::new();
-
-    let _name = self.name;
-    changes.push(Box::new(
-        users::name.eq(_name).as_changeset()
-    ));
-
-    if let Some(_email) = self.email {
-      changes.push(Box::new(
-          users::email.eq(_email).as_changeset()
-      ))
-    }
-
-    changes
-  }
-}
-
-impl NewUser {
-  pub fn new(_name: &str, _email: Option<&str>) -> Self {
-    NewUser {
-      name: _name.to_string(),
-      email: _email.map(|s| s.to_string()),
-    }
-  }
-}
-
