@@ -1,6 +1,8 @@
 use diesel::*;
 use models::user::{users, User};
+use models::connectable::Connectable;
 use self::posts::dsl::*;
+
 
 infer_table_from_schema!(dotenv!("DATABASE_URL"), "posts");
 
@@ -14,13 +16,6 @@ pub struct Post {
 }
 
 impl Post {
-
-  #[inline]
-  fn conn() -> Connection {
-    let connection_url = ::std::env::var("DATABASE_URL").ok()
-      .expect("DATABASE_URL must be set in order to run tests");
-    Connection::establish(&connection_url).unwrap()
-  }
 
   pub fn find(_id: i32) -> Post {
     Post::conn().find(posts, _id).unwrap()
@@ -40,6 +35,8 @@ impl Post {
   }
 
 }
+
+impl Connectable for Post {}
 
 #[derive(RustcDecodable, PartialEq, Eq, Debug, Clone, Queriable)]
 #[insertable_into(posts)]

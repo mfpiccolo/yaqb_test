@@ -1,5 +1,6 @@
 use diesel::*;
 use models::post::Post;
+use models::connectable::Connectable;
 use self::users::dsl::*;
 use diesel::query_builder::*;
 
@@ -14,13 +15,6 @@ pub struct User {
 }
 
 impl User {
-
-  #[inline]
-  fn conn() -> Connection {
-    let connection_url = ::std::env::var("DATABASE_URL").ok()
-      .expect("DATABASE_URL must be set in order to run tests");
-    Connection::establish(&connection_url).unwrap()
-  }
 
   pub fn find(_id: i32) -> User {
     User::conn().find(users, _id).unwrap()
@@ -41,8 +35,9 @@ impl User {
   pub fn posts_vec(&self) -> Vec<Post> {
     Post::belonging_to(self).load(&User::conn()).unwrap().collect()
   }
-
 }
+
+impl Connectable for User {}
 
 #[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable)]
 #[insertable_into(users)]
