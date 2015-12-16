@@ -3,7 +3,7 @@ use models::post::Post;
 use self::users::dsl::*;
 use diesel::query_builder::*;
 
-infer_schema!(dotenv!("DATABASE_URL"));
+infer_table_from_schema!(dotenv!("DATABASE_URL"), "users");
 
 #[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable, RustcEncodable)]
 #[changeset_for(users)]
@@ -27,7 +27,7 @@ impl User {
   }
 
   pub fn count() -> i64 {
-    users.count().get_results(&User::conn()).ok().unwrap().into()
+    users.count().get_result(&User::conn()).ok().unwrap()
   }
 
   pub fn insert(new_users: Vec<NewUser>) -> Vec<User> {

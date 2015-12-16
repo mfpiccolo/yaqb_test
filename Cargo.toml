@@ -6,7 +6,7 @@ authors = ["Mike Piccolo <mfpiccolo@gmail.com>"]
 [dependencies]
 diesel = { git = "https://github.com/sgrif/diesel" }
 diesel_codegen = { git = "https://github.com/sgrif/diesel", version = "0.3.0", default-features = false, features = ["nightly"] }
-dotenv = "0.7.0"
-dotenv_macros = "0.7.0"
+dotenv = "0.7.1"
+dotenv_macros = "0.7.1"
 nickel = "*"
 rustc-serialize = "*"
