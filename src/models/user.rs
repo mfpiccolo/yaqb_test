@@ -27,8 +27,7 @@ impl User {
   }
 
   pub fn count() -> i64 {
-    let select_count = users.select_sql::<types::BigInt>("COUNT(*)");
-    User::conn().query_one::<_, i64>(select_count.clone()).unwrap()
+    users.count().get_results(&User::conn()).ok().unwrap().into()
   }
 
   pub fn insert(new_users: Vec<NewUser>) -> Vec<User> {
