@@ -1,5 +1,6 @@
 #![feature(plugin, custom_derive, custom_attribute)]
-#![plugin(diesel_codegen, dotenv_macros)]
+#![plugin(diesel_codegen, dotenv_macros, json_macros)]
+#![plugin(json_macros)]
 
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate nickel;
@@ -18,8 +19,8 @@ use nickel::{Nickel,
 mod models;
 mod jsonify;
 
-use models::user::{User, NewUser};
-use models::post::{Post, NewPost};
+use models::user::{users, User, NewUser};
+use models::post::{posts, Post, NewPost};
 use jsonify::*;
 use diesel::*;
 pub use diesel::data_types::*;
@@ -84,6 +85,12 @@ fn main() {
     let new_posts = vec!(new_post);
     let posts: Vec<Post> = Post::insert(new_posts);
     posts.to_json()
+  });
+
+
+  router.get("/users_and_posts", middleware! { |request|
+    let users_and_posts = User::users_and_posts();
+    users_and_posts.to_json()
   });
 
   // ******* End Routes

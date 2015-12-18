@@ -1,13 +1,15 @@
 use diesel::*;
-use models::post::Post;
+use models::post::{posts, Post};
 use models::connectable::Connectable;
 use self::users::dsl::*;
 use diesel::query_builder::*;
+use diesel::query_builder::debug::DebugQueryBuilder;
 
 infer_table_from_schema!(dotenv!("DATABASE_URL"), "users");
 
 #[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable, RustcEncodable)]
 #[changeset_for(users)]
+#[has_many(posts)]
 pub struct User {
   pub id: i32,
   pub name: String,
@@ -34,6 +36,11 @@ impl User {
 
   pub fn posts_vec(&self) -> Vec<Post> {
     Post::belonging_to(self).load(&User::conn()).unwrap().collect()
+  }
+
+  pub fn users_and_posts() -> Vec<(User, Option<Post>)> {
+    users.left_outer_join(posts::table)
+      .load(&User::conn()).unwrap().collect()
   }
 }
 

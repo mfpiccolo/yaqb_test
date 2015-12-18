@@ -7,6 +7,7 @@ dependencies = [
  "dotenv 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "dotenv_codegen 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "dotenv_macros 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "json_macros 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "nickel 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
  "syntex 0.22.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -75,6 +76,7 @@ dependencies = [
 [[package]]
 name = "diesel_codegen"
 version = "0.3.0"
+source = "git+https://github.com/sgrif/diesel#a7688c5047c2707675f11cb44602d529c74980f8"
 dependencies = [
  "aster 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "diesel 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -144,6 +146,14 @@ dependencies = [
  "typeable 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "unicase 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.2.38 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "json_macros"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

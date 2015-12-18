@@ -8,10 +8,10 @@ infer_table_from_schema!(dotenv!("DATABASE_URL"), "posts");
 #[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
 #[belongs_to(user)]
 pub struct Post {
-  id: i32,
-  user_id: i32,
-  title: String,
-  body: Option<String>,
+  pub id: i32,
+  pub user_id: i32,
+  pub title: String,
+  pub body: Option<String>,
 }
 
 impl Post {
