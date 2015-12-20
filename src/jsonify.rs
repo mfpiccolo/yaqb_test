@@ -28,7 +28,7 @@ impl<T> Jsonable for Vec<T> where T: Jsonable {
 
 impl Jsonable for Vec<(User, Option<Post>)> {
   fn to_json(&self) -> String {
-    let mut current_user = &User {id: -1, name: "".to_string(), email: Some("".to_string())};
+    let mut current_user = &User::new();
     let mut relationships: Vec<RelationshipData> = vec!();
     let mut json_data: Vec<JsonApiData> = vec!();
     let mut current_json_data = JsonApiData::new();
@@ -94,6 +94,27 @@ impl JsonApiData {
       attributes: u.to_json(),
       links: "https://somewhere.com/".to_string(),
       relationships: vec!(),
+    }
+  }
+}
+
+trait JsonApiable {
+  fn new() -> Self;
+}
+
+impl JsonApiable for User {
+  fn new() -> User {
+    User {id: -1, name: "".to_string(), email: None}
+  }
+}
+
+impl JsonApiable for Post {
+  fn new() -> Post {
+    Post {
+      id: -1,
+      user_id: -1,
+      title: "".to_string(),
+      body: None,
     }
   }
 }
