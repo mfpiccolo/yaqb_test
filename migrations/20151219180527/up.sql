@@ -1,7 +1,7 @@
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   name VARCHAR NOT NULL,
-  hair_color VARCHAR
+  email VARCHAR
 );
 
 CREATE TABLE posts (
