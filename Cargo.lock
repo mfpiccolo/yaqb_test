@@ -76,7 +76,6 @@ dependencies = [
 [[package]]
 name = "diesel_codegen"
 version = "0.3.0"
-source = "git+https://github.com/sgrif/diesel#a7688c5047c2707675f11cb44602d529c74980f8"
 dependencies = [
  "aster 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "diesel 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",

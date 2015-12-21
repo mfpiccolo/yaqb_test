@@ -19,6 +19,18 @@ impl Jsonable for Post {
   }
 }
 
+impl<'a> Jsonable for &'a User {
+  fn to_json(&self) -> String {
+    json::encode(self).unwrap()
+  }
+}
+
+impl<'a> Jsonable for &'a Post {
+  fn to_json(&self) -> String {
+    json::encode(self).unwrap()
+  }
+}
+
 impl<T> Jsonable for Vec<T> where T: Jsonable {
   fn to_json(&self) -> String {
     let vec_strings: Vec<String> = self.into_iter().map(|p| p.to_json()).collect();
@@ -30,29 +42,43 @@ impl Jsonable for Vec<(User, Option<Post>)> {
   fn to_json(&self) -> String {
     let mut current_user = &User::new();
     let mut relationships: Vec<RelationshipData> = vec!();
-    let mut json_data: Vec<JsonApiData> = vec!();
-    let mut current_json_data = JsonApiData::new();
+    let mut json_data: Vec<JsonApiData<&User>> = vec!();
+    let mut current_json_data = current_user.to_json_api();
+    let mut included: Vec<JsonApiData<&Post>> = vec!();
 
     for user_post in self {
       let user = &user_post.0;
       let post = &user_post.1;
       let relationship = match *post {
-        Some(ref p) => Some(RelationshipData { _type: "posts".to_string(), id: p.id }),
+        Some(ref p) => {
+          included.push(p.to_json_api());
+          Some(RelationshipData { _type: "posts".to_string(), id: p.id })
+        },
         None => None,
       };
+
       if current_user.id != user.id {
         if current_user.id != -1 {
           json_data.push(current_json_data.clone());
         }
         current_user = user;
-        current_json_data = JsonApiData::build(user);
+        current_json_data = user.to_json_api();
       }
       current_json_data.relationships.push(relationship);
     }
 
-    println!("{:?}", json_data);
+    let cd = CompoundDocument {
+      data: json_data,
+      included: included,
+    };
+    println!("{:?}", cd);
     "slkjf".to_string()
   }
+}
+#[derive(Debug)]
+pub struct CompoundDocument<T: Jsonable, U: Jsonable> {
+  data: Vec<JsonApiData<T>>,
+  included: Vec<JsonApiData<U>>,
 }
 
 #[derive(Debug, Clone)]
@@ -68,7 +94,8 @@ impl RelationshipData {
 }
 
 #[derive(Debug, Clone)]
-pub struct JsonApiData {
+pub struct JsonApiData<T: Jsonable> {
+  pub record:        T,
   pub _type:         String,
   pub id:            i32,
   pub attributes:    String,
@@ -76,45 +103,47 @@ pub struct JsonApiData {
   pub relationships: Vec<Option<RelationshipData>>,
 }
 
-impl JsonApiData {
-  fn new() -> JsonApiData {
-    JsonApiData {
-      _type:         "".to_string(),
-      id:            0,
-      attributes:    "".to_string(),
-      links:         "".to_string(),
-      relationships: vec!(None),
-    }
+trait JsonApiable where Self: Jsonable + Sized {
+  fn new() -> Self;
+
+  fn to_json_api(&self) -> JsonApiData<&Self>;
+}
+
+impl JsonApiable for User {
+  fn new() -> Self {
+    User {id: -1, name: "".to_string(), email: None}
   }
 
-  fn build(u: &User) -> JsonApiData {
+  fn to_json_api(&self) -> JsonApiData<&Self> {
     JsonApiData {
+      record: self,
       _type: "users".to_string(),
-      id:   u.id,
-      attributes: u.to_json(),
+      id:   self.id,
+      attributes: self.to_json(),
       links: "https://somewhere.com/".to_string(),
       relationships: vec!(),
     }
   }
 }
 
-trait JsonApiable {
-  fn new() -> Self;
-}
-
-impl JsonApiable for User {
-  fn new() -> User {
-    User {id: -1, name: "".to_string(), email: None}
-  }
-}
-
 impl JsonApiable for Post {
-  fn new() -> Post {
+  fn new() -> Self {
     Post {
       id: -1,
       user_id: -1,
       title: "".to_string(),
       body: None,
+    }
+  }
+
+  fn to_json_api(&self) -> JsonApiData<&Post> {
+    JsonApiData {
+      record: self,
+      _type: "posts".to_string(),
+      id:   self.id,
+      attributes: self.to_json(),
+      links: "https://somewhere.com/".to_string(),
+      relationships: vec!(),
     }
   }
 }
