@@ -1,4 +1,13 @@
+mod json_api_data;
+mod relationship_data;
+mod compound_document;
+mod json_apiable;
+
 use rustc_serialize::json;
+use self::relationship_data::RelationshipData;
+use self::json_api_data::JsonApiData;
+use self::compound_document::CompoundDocument;
+use self::json_apiable::JsonApiable;
 use models::user::User;
 use models::post::Post;
 use std::fmt::Debug;
@@ -73,77 +82,5 @@ impl Jsonable for Vec<(User, Option<Post>)> {
     };
     println!("{:?}", cd);
     "slkjf".to_string()
-  }
-}
-#[derive(Debug)]
-pub struct CompoundDocument<T: Jsonable, U: Jsonable> {
-  data: Vec<JsonApiData<T>>,
-  included: Vec<JsonApiData<U>>,
-}
-
-#[derive(Debug, Clone)]
-pub struct RelationshipData {
-  pub _type: String,
-  pub id:   i32,
-}
-
-impl RelationshipData {
-  fn new() -> RelationshipData {
-    RelationshipData {_type: "".to_string(), id: 0}
-  }
-}
-
-#[derive(Debug, Clone)]
-pub struct JsonApiData<T: Jsonable> {
-  pub record:        T,
-  pub _type:         String,
-  pub id:            i32,
-  pub attributes:    String,
-  pub links:         String,
-  pub relationships: Vec<Option<RelationshipData>>,
-}
-
-trait JsonApiable where Self: Jsonable + Sized {
-  fn new() -> Self;
-
-  fn to_json_api(&self) -> JsonApiData<&Self>;
-}
-
-impl JsonApiable for User {
-  fn new() -> Self {
-    User {id: -1, name: "".to_string(), email: None}
-  }
-
-  fn to_json_api(&self) -> JsonApiData<&Self> {
-    JsonApiData {
-      record: self,
-      _type: "users".to_string(),
-      id:   self.id,
-      attributes: self.to_json(),
-      links: "https://somewhere.com/".to_string(),
-      relationships: vec!(),
-    }
-  }
-}
-
-impl JsonApiable for Post {
-  fn new() -> Self {
-    Post {
-      id: -1,
-      user_id: -1,
-      title: "".to_string(),
-      body: None,
-    }
-  }
-
-  fn to_json_api(&self) -> JsonApiData<&Post> {
-    JsonApiData {
-      record: self,
-      _type: "posts".to_string(),
-      id:   self.id,
-      attributes: self.to_json(),
-      links: "https://somewhere.com/".to_string(),
-      relationships: vec!(),
-    }
   }
 }

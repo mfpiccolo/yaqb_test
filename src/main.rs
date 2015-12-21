@@ -17,11 +17,11 @@ use nickel::{Nickel,
 };
 
 mod models;
-mod jsonify;
+mod jsonable;
 
 use models::user::{users, User, NewUser};
 use models::post::{posts, Post, NewPost};
-use jsonify::*;
+use jsonable::*;
 use diesel::*;
 pub use diesel::data_types::*;
 use std::time::*;
