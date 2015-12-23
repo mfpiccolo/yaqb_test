@@ -11,6 +11,7 @@ use self::json_apiable::JsonApiable;
 use models::user::User;
 use models::post::Post;
 use std::fmt::Debug;
+use rustc_serialize::Encodable;
 
 pub trait Jsonable {
   fn to_json(&self) -> String;
@@ -35,6 +36,24 @@ impl<'a> Jsonable for &'a User {
 }
 
 impl<'a> Jsonable for &'a Post {
+  fn to_json(&self) -> String {
+    json::encode(self).unwrap()
+  }
+}
+
+impl<T: Jsonable + Encodable> Jsonable for JsonApiData<T> {
+  fn to_json(&self) -> String {
+    json::encode(self).unwrap()
+  }
+}
+
+impl Jsonable for RelationshipData {
+  fn to_json(&self) -> String {
+    json::encode(self).unwrap()
+  }
+}
+
+impl<'a> Jsonable for CompoundDocument<&'a User, &'a Post> {
   fn to_json(&self) -> String {
     json::encode(self).unwrap()
   }
@@ -80,7 +99,7 @@ impl Jsonable for Vec<(User, Option<Post>)> {
       data: json_data,
       included: included,
     };
-    println!("{:?}", cd);
+    println!("{:?}", cd.to_json());
     "slkjf".to_string()
   }
 }
