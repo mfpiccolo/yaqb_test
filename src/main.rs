@@ -1,10 +1,11 @@
 #![feature(plugin, custom_derive, custom_attribute)]
-#![plugin(diesel_codegen, dotenv_macros, json_macros)]
-#![plugin(json_macros)]
+#![plugin(diesel_codegen, dotenv_macros, json_macros, serde_macros)]
 
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate nickel;
 #[macro_use] extern crate dotenv;
+extern crate serde;
+extern crate serde_json;
 extern crate rustc_serialize;
 
 use nickel::{Nickel,

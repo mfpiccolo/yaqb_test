@@ -1,7 +1,7 @@
 use jsonable::Jsonable;
 use jsonable::relationship_data::RelationshipData;
 
-#[derive(Debug, Clone, RustcDecodable, RustcEncodable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JsonApiData<T: Jsonable> {
   pub _type:         String,
   pub id:            i32,

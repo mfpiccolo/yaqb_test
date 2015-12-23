@@ -5,7 +5,7 @@ use self::posts::dsl::*;
 
 infer_table_from_schema!(dotenv!("DATABASE_URL"), "posts");
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcEncodable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, Serialize, Deserialize)]
 #[belongs_to(user)]
 pub struct Post {
   pub id: i32,
@@ -37,7 +37,7 @@ impl Post {
 
 impl Connectable for Post {}
 
-#[derive(RustcDecodable, PartialEq, Eq, Debug, Clone, Queriable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable)]
 #[insertable_into(posts)]
 #[changeset_for(posts)]
 #[allow(dead_code)]

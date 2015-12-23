@@ -7,7 +7,7 @@ use diesel::query_builder::debug::DebugQueryBuilder;
 
 infer_table_from_schema!(dotenv!("DATABASE_URL"), "users");
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable, RustcEncodable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, Serialize, Deserialize, RustcDecodable)]
 #[changeset_for(users)]
 #[has_many(posts)]
 pub struct User {

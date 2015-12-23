@@ -3,7 +3,6 @@ mod relationship_data;
 mod compound_document;
 mod json_apiable;
 
-use rustc_serialize::json;
 use self::relationship_data::RelationshipData;
 use self::json_api_data::JsonApiData;
 use self::compound_document::CompoundDocument;
@@ -11,7 +10,8 @@ use self::json_apiable::JsonApiable;
 use models::user::User;
 use models::post::Post;
 use std::fmt::Debug;
-use rustc_serialize::Encodable;
+use serde_json;
+use serde::ser::Serialize;
 
 pub trait Jsonable {
   fn to_json(&self) -> String;
@@ -19,50 +19,50 @@ pub trait Jsonable {
 
 impl Jsonable for User {
   fn to_json(&self) -> String {
-    json::encode(self).unwrap()
+    serde_json::to_string(self).unwrap()
   }
 }
 
 impl Jsonable for Post {
   fn to_json(&self) -> String {
-    json::encode(self).unwrap()
+    serde_json::to_string(self).unwrap()
   }
 }
 
 impl<'a> Jsonable for &'a User {
   fn to_json(&self) -> String {
-    json::encode(self).unwrap()
+    serde_json::to_string(self).unwrap()
   }
 }
 
 impl<'a> Jsonable for &'a Post {
   fn to_json(&self) -> String {
-    json::encode(self).unwrap()
+    serde_json::to_string(self).unwrap()
   }
 }
 
-impl<T: Jsonable + Encodable> Jsonable for JsonApiData<T> {
+impl<T: Jsonable + Serialize> Jsonable for JsonApiData<T> {
   fn to_json(&self) -> String {
-    json::encode(self).unwrap()
+    serde_json::to_string(self).unwrap()
   }
 }
 
 impl Jsonable for RelationshipData {
   fn to_json(&self) -> String {
-    json::encode(self).unwrap()
+    serde_json::to_string(self).unwrap()
   }
 }
 
 impl<'a> Jsonable for CompoundDocument<&'a User, &'a Post> {
   fn to_json(&self) -> String {
-    json::encode(self).unwrap()
+    serde_json::to_string(self).unwrap()
   }
 }
 
 impl<T> Jsonable for Vec<T> where T: Jsonable {
   fn to_json(&self) -> String {
     let vec_strings: Vec<String> = self.into_iter().map(|p| p.to_json()).collect();
-    json::encode(&vec_strings).unwrap()
+    serde_json::to_string(&vec_strings).unwrap()
   }
 }
 

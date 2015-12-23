@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, RustcDecodable, RustcEncodable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RelationshipData {
   pub _type: String,
   pub id:   i32,
