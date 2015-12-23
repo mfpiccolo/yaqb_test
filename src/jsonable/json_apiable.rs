@@ -16,10 +16,9 @@ impl JsonApiable for User {
 
   fn to_json_api(&self) -> JsonApiData<&Self> {
     JsonApiData {
-      record: self,
       _type: "users".to_string(),
       id:   self.id,
-      attributes: self.to_json(),
+      attributes: self,
       links: "https://somewhere.com/".to_string(),
       relationships: vec!(),
     }
@@ -38,10 +37,9 @@ impl JsonApiable for Post {
 
   fn to_json_api(&self) -> JsonApiData<&Post> {
     JsonApiData {
-      record: self,
       _type: "posts".to_string(),
       id:   self.id,
-      attributes: self.to_json(),
+      attributes: self,
       links: "https://somewhere.com/".to_string(),
       relationships: vec!(),
     }

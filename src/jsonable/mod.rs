@@ -99,7 +99,6 @@ impl Jsonable for Vec<(User, Option<Post>)> {
       data: json_data,
       included: included,
     };
-    println!("{:?}", cd.to_json());
-    "slkjf".to_string()
+    cd.to_json()
   }
 }
