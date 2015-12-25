@@ -1,12 +1,12 @@
 use jsonable::Jsonable;
-use jsonable::json_api_data::JsonApiData;
+use jsonable::resource_object::ResourceObject;
 use models::user::User;
 use models::post::Post;
 
 pub trait JsonApiable where Self: Jsonable + Sized {
   fn new() -> Self;
 
-  fn to_json_api(&self) -> JsonApiData<&Self>;
+  fn to_json_api(&self) -> ResourceObject<&Self>;
 }
 
 impl JsonApiable for User {
@@ -14,8 +14,8 @@ impl JsonApiable for User {
     User {id: -1, name: "".to_string(), email: None}
   }
 
-  fn to_json_api(&self) -> JsonApiData<&Self> {
-    JsonApiData {
+  fn to_json_api(&self) -> ResourceObject<&Self> {
+    ResourceObject {
       _type: "users".to_string(),
       id:   self.id,
       attributes: self,
@@ -35,8 +35,8 @@ impl JsonApiable for Post {
     }
   }
 
-  fn to_json_api(&self) -> JsonApiData<&Post> {
-    JsonApiData {
+  fn to_json_api(&self) -> ResourceObject<&Post> {
+    ResourceObject {
       _type: "posts".to_string(),
       id:   self.id,
       attributes: self,

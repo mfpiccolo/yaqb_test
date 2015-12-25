@@ -1,8 +1,8 @@
 use jsonable::Jsonable;
-use jsonable::json_api_data::JsonApiData;
+use jsonable::resource_object::ResourceObject;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CompoundDocument<T: Jsonable, U: Jsonable> {
-  pub data: Vec<JsonApiData<T>>,
-  pub included: Vec<JsonApiData<U>>,
+  pub data: Vec<ResourceObject<T>>,
+  pub included: Vec<ResourceObject<U>>,
 }
