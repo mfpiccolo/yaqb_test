@@ -1,12 +1,12 @@
 mod resource_object;
 mod relationship_object;
 mod document;
-pub mod json_apiable;
+pub mod to_resource_object;
 
 use self::relationship_object::RelationshipObject;
 use self::resource_object::ResourceObject;
 use self::document::Document;
-use self::json_apiable::JsonApiable;
+use self::to_resource_object::ToResourceObject;
 use models::user::User;
 use models::post::Post;
 use std::fmt::Debug;
@@ -68,7 +68,7 @@ impl<T> Jsonable for Vec<T> where T: Jsonable {
 
 impl Jsonable for Vec<(User, Option<Post>)> {
   fn to_json(&self) -> String {
-    let mut current_user = &User::new();
+    let mut current_user = &User {id: -1, name: "".to_string(), email: None};
     let mut relationships: Vec<RelationshipObject> = vec!();
     let mut json_data: Vec<ResourceObject<&User>> = vec!();
     let mut current_json_data = current_user.to_resource_object();

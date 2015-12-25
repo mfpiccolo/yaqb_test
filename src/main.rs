@@ -26,7 +26,7 @@ use jsonable::*;
 use diesel::*;
 pub use diesel::data_types::*;
 use std::time::*;
-use jsonable::json_apiable::JsonApiable;
+use jsonable::to_resource_object::ToResourceObject;
 
 fn main() {
   dotenv::dotenv().ok();
