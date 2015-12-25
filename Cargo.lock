@@ -5,7 +5,6 @@ dependencies = [
  "diesel 0.3.0",
  "diesel_codegen 0.3.0",
  "dotenv 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "dotenv_codegen 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "dotenv_macros 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "json_macros 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "nickel 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -13,7 +12,7 @@ dependencies = [
  "serde 0.6.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_macros 0.6.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "syntex 0.22.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "syntex 0.24.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -100,8 +99,6 @@ version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "dotenv 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "syntex 0.22.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "syntex_syntax 0.23.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -377,15 +374,15 @@ dependencies = [
 
 [[package]]
 name = "syntex"
-version = "0.22.0"
+version = "0.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "syntex_syntax 0.23.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "syntex_syntax 0.24.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "syntex_syntax"
-version = "0.23.0"
+version = "0.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "bitflags 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",

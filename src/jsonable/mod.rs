@@ -1,9 +1,9 @@
 mod json_api_data;
-mod relationship_data;
+mod resource_object;
 mod compound_document;
 mod json_apiable;
 
-use self::relationship_data::RelationshipData;
+use self::resource_object::ResourceObject;
 use self::json_api_data::JsonApiData;
 use self::compound_document::CompoundDocument;
 use self::json_apiable::JsonApiable;
@@ -47,7 +47,7 @@ impl<T: Jsonable + Serialize> Jsonable for JsonApiData<T> {
   }
 }
 
-impl Jsonable for RelationshipData {
+impl Jsonable for ResourceObject {
   fn to_json(&self) -> String {
     serde_json::to_string(self).unwrap()
   }
@@ -69,7 +69,7 @@ impl<T> Jsonable for Vec<T> where T: Jsonable {
 impl Jsonable for Vec<(User, Option<Post>)> {
   fn to_json(&self) -> String {
     let mut current_user = &User::new();
-    let mut relationships: Vec<RelationshipData> = vec!();
+    let mut relationships: Vec<ResourceObject> = vec!();
     let mut json_data: Vec<JsonApiData<&User>> = vec!();
     let mut current_json_data = current_user.to_json_api();
     let mut included: Vec<JsonApiData<&Post>> = vec!();
@@ -80,7 +80,7 @@ impl Jsonable for Vec<(User, Option<Post>)> {
       let relationship = match *post {
         Some(ref p) => {
           included.push(p.to_json_api());
-          Some(RelationshipData { _type: "posts".to_string(), id: p.id })
+          Some(ResourceObject { _type: "posts".to_string(), id: p.id })
         },
         None => None,
       };

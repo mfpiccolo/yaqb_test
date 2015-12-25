@@ -1,5 +1,5 @@
 use jsonable::Jsonable;
-use jsonable::relationship_data::RelationshipData;
+use jsonable::resource_object::ResourceObject;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JsonApiData<T: Jsonable> {
@@ -7,5 +7,5 @@ pub struct JsonApiData<T: Jsonable> {
   pub id:            i32,
   pub attributes:    T,
   pub links:         String,
-  pub relationships: Vec<Option<RelationshipData>>,
+  pub relationships: Vec<Option<ResourceObject>>,
 }
