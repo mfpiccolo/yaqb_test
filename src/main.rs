@@ -18,7 +18,7 @@ use nickel::{Nickel,
 };
 
 mod models;
-mod jsonable;
+pub mod jsonable;
 
 use models::user::{users, User, NewUser};
 use models::post::{posts, Post, NewPost};
@@ -26,6 +26,7 @@ use jsonable::*;
 use diesel::*;
 pub use diesel::data_types::*;
 use std::time::*;
+use jsonable::json_apiable::JsonApiable;
 
 fn main() {
   dotenv::dotenv().ok();
@@ -42,12 +43,12 @@ fn main() {
   // ****** User Routes
   router.get("/users/:user_id", middleware! { |request|
     let user_id = get_user_id(request);
-    User::find(user_id).to_json()
+    User::find(user_id).to_json_api().to_json()
   });
 
   router.get("/users/:user_id/posts", middleware! { |request|
     let user_id = get_user_id(&request);
-    let user: User = User::find(user_id);
+    let user = User::find(user_id);
     user.posts_vec().to_json()
   });
 

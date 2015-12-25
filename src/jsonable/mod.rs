@@ -1,11 +1,11 @@
 mod resource_object;
 mod relationship_object;
-mod compound_document;
-mod json_apiable;
+mod document;
+pub mod json_apiable;
 
 use self::relationship_object::RelationshipObject;
 use self::resource_object::ResourceObject;
-use self::compound_document::CompoundDocument;
+use self::document::Document;
 use self::json_apiable::JsonApiable;
 use models::user::User;
 use models::post::Post;
@@ -53,7 +53,7 @@ impl Jsonable for RelationshipObject {
   }
 }
 
-impl<'a> Jsonable for CompoundDocument<&'a User, &'a Post> {
+impl<'a> Jsonable for Document<&'a User, &'a Post> {
   fn to_json(&self) -> String {
     serde_json::to_string(self).unwrap()
   }
@@ -95,9 +95,9 @@ impl Jsonable for Vec<(User, Option<Post>)> {
       current_json_data.relationships.push(relationship);
     }
 
-    let cd = CompoundDocument {
+    let cd = Document {
       data: json_data,
-      included: included,
+      included: Some(included),
     };
     cd.to_json()
   }
