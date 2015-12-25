@@ -6,7 +6,7 @@ use models::post::Post;
 pub trait JsonApiable where Self: Jsonable + Sized {
   fn new() -> Self;
 
-  fn to_json_api(&self) -> ResourceObject<&Self>;
+  fn to_resource_object(&self) -> ResourceObject<&Self>;
 }
 
 impl JsonApiable for User {
@@ -14,7 +14,7 @@ impl JsonApiable for User {
     User {id: -1, name: "".to_string(), email: None}
   }
 
-  fn to_json_api(&self) -> ResourceObject<&Self> {
+  fn to_resource_object(&self) -> ResourceObject<&Self> {
     ResourceObject {
       _type: "users".to_string(),
       id:   self.id,
@@ -35,7 +35,7 @@ impl JsonApiable for Post {
     }
   }
 
-  fn to_json_api(&self) -> ResourceObject<&Post> {
+  fn to_resource_object(&self) -> ResourceObject<&Post> {
     ResourceObject {
       _type: "posts".to_string(),
       id:   self.id,

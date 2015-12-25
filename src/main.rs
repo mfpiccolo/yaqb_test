@@ -43,7 +43,7 @@ fn main() {
   // ****** User Routes
   router.get("/users/:user_id", middleware! { |request|
     let user_id = get_user_id(request);
-    User::find(user_id).to_json_api().to_json()
+    User::find(user_id).to_resource_object().to_json()
   });
 
   router.get("/users/:user_id/posts", middleware! { |request|
@@ -58,7 +58,7 @@ fn main() {
     let user_id = get_user_id(request);
     let changed_user = request.json_as::<User>().unwrap();
     let user: User = User::update(user_id, changed_user);
-    user.to_json()
+    user.to_resource_object().to_json()
   });
 
   router.get("/users", middleware!(User::count().to_string()));
@@ -91,8 +91,7 @@ fn main() {
 
 
   router.get("/users_and_posts", middleware! { |request|
-    let users_and_posts = User::users_and_posts();
-    users_and_posts.to_json()
+    let users_and_posts = User::users_and_posts().to_json();
   });
 
   // ******* End Routes

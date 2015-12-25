@@ -71,7 +71,7 @@ impl Jsonable for Vec<(User, Option<Post>)> {
     let mut current_user = &User::new();
     let mut relationships: Vec<RelationshipObject> = vec!();
     let mut json_data: Vec<ResourceObject<&User>> = vec!();
-    let mut current_json_data = current_user.to_json_api();
+    let mut current_json_data = current_user.to_resource_object();
     let mut included: Vec<ResourceObject<&Post>> = vec!();
 
     for user_post in self {
@@ -79,7 +79,7 @@ impl Jsonable for Vec<(User, Option<Post>)> {
       let post = &user_post.1;
       let relationship = match *post {
         Some(ref p) => {
-          included.push(p.to_json_api());
+          included.push(p.to_resource_object());
           Some(RelationshipObject { _type: "posts".to_string(), id: p.id })
         },
         None => None,
@@ -90,7 +90,7 @@ impl Jsonable for Vec<(User, Option<Post>)> {
           json_data.push(current_json_data.clone());
         }
         current_user = user;
-        current_json_data = user.to_json_api();
+        current_json_data = user.to_resource_object();
       }
       current_json_data.relationships.push(relationship);
     }
