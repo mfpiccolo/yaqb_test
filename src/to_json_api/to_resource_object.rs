@@ -1,9 +1,9 @@
-use jsonable::Jsonable;
-use jsonable::resource_object::ResourceObject;
+use to_json_api::ToJsonApi;
+use to_json_api::resource_object::ResourceObject;
 use models::user::User;
 use models::post::Post;
 
-pub trait ToResourceObject where Self: Jsonable + Sized {
+pub trait ToResourceObject where Self: ToJsonApi + Sized {
   fn to_resource_object(&self) -> ResourceObject<&Self>;
 }
 

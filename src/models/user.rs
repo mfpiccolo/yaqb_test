@@ -2,8 +2,6 @@ use diesel::*;
 use models::post::{posts, Post};
 use models::connectable::Connectable;
 use self::users::dsl::*;
-use diesel::query_builder::*;
-use diesel::query_builder::debug::DebugQueryBuilder;
 
 infer_table_from_schema!(dotenv!("DATABASE_URL"), "users");
 

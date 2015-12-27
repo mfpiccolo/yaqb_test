@@ -9,67 +9,65 @@ use self::document::Document;
 use self::to_resource_object::ToResourceObject;
 use models::user::User;
 use models::post::Post;
-use std::fmt::Debug;
 use serde_json;
 use serde::ser::Serialize;
 
-pub trait Jsonable {
+pub trait ToJsonApi {
   fn to_json(&self) -> String;
 }
 
-impl Jsonable for User {
+impl ToJsonApi for User {
   fn to_json(&self) -> String {
     serde_json::to_string(self).unwrap()
   }
 }
 
-impl Jsonable for Post {
+impl ToJsonApi for Post {
   fn to_json(&self) -> String {
     serde_json::to_string(self).unwrap()
   }
 }
 
-impl<'a> Jsonable for &'a User {
+impl<'a> ToJsonApi for &'a User {
   fn to_json(&self) -> String {
     serde_json::to_string(self).unwrap()
   }
 }
 
-impl<'a> Jsonable for &'a Post {
+impl<'a> ToJsonApi for &'a Post {
   fn to_json(&self) -> String {
     serde_json::to_string(self).unwrap()
   }
 }
 
-impl<T: Jsonable + Serialize> Jsonable for ResourceObject<T> {
+impl<T: ToJsonApi + Serialize> ToJsonApi for ResourceObject<T> {
   fn to_json(&self) -> String {
     serde_json::to_string(self).unwrap()
   }
 }
 
-impl Jsonable for RelationshipObject {
+impl ToJsonApi for RelationshipObject {
   fn to_json(&self) -> String {
     serde_json::to_string(self).unwrap()
   }
 }
 
-impl<'a> Jsonable for Document<&'a User, &'a Post> {
+impl<'a> ToJsonApi for Document<&'a User, &'a Post> {
   fn to_json(&self) -> String {
     serde_json::to_string(self).unwrap()
   }
 }
 
-impl<T> Jsonable for Vec<T> where T: Jsonable {
+impl<T> ToJsonApi for Vec<T> where T: ToJsonApi {
   fn to_json(&self) -> String {
     let vec_strings: Vec<String> = self.into_iter().map(|p| p.to_json()).collect();
     serde_json::to_string(&vec_strings).unwrap()
   }
 }
 
-impl Jsonable for Vec<(User, Option<Post>)> {
+impl ToJsonApi for Vec<(User, Option<Post>)> {
   fn to_json(&self) -> String {
     let mut current_user = &User {id: -1, name: "".to_string(), email: None};
-    let mut relationships: Vec<RelationshipObject> = vec!();
     let mut json_data: Vec<ResourceObject<&User>> = vec!();
     let mut current_json_data = current_user.to_resource_object();
     let mut included: Vec<ResourceObject<&Post>> = vec!();

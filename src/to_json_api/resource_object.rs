@@ -1,8 +1,8 @@
-use jsonable::Jsonable;
-use jsonable::relationship_object::RelationshipObject;
+use to_json_api::ToJsonApi;
+use to_json_api::relationship_object::RelationshipObject;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ResourceObject<T: Jsonable> {
+pub struct ResourceObject<T: ToJsonApi> {
   pub _type:         String,
   pub id:            i32,
   pub attributes:    T,

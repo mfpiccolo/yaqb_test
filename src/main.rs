@@ -17,16 +17,15 @@ use nickel::{Nickel,
   JsonBody
 };
 
-mod models;
-pub mod jsonable;
+pub mod models;
+pub mod to_json_api;
 
-use models::user::{users, User, NewUser};
-use models::post::{posts, Post, NewPost};
-use jsonable::*;
+use models::user::{User, NewUser};
+use models::post::{Post, NewPost};
+use to_json_api::*;
 use diesel::*;
 pub use diesel::data_types::*;
-use std::time::*;
-use jsonable::to_resource_object::ToResourceObject;
+use to_json_api::to_resource_object::ToResourceObject;
 
 fn main() {
   dotenv::dotenv().ok();
@@ -90,8 +89,8 @@ fn main() {
   });
 
 
-  router.get("/users_and_posts", middleware! { |request|
-    let users_and_posts = User::users_and_posts().to_json();
+  router.get("/users_and_posts", middleware! {
+    User::users_and_posts().to_json()
   });
 
   // ******* End Routes
