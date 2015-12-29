@@ -5,7 +5,7 @@ use self::posts::dsl::*;
 
 infer_table_from_schema!(dotenv!("DATABASE_URL"), "posts");
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, Serialize, Deserialize, Default)]
 #[belongs_to(user)]
 pub struct Post {
   pub id: i32,

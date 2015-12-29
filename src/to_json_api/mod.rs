@@ -7,8 +7,6 @@ use self::relationship_object::RelationshipObject;
 use self::resource_object::ResourceObject;
 use self::document::Document;
 use self::to_resource_object::ToResourceObject;
-use models::user::User;
-use models::post::Post;
 use serde_json;
 
 pub trait ToJsonApi {
@@ -26,30 +24,32 @@ impl<T> ToJsonApi for Vec<T> where T: ToResourceObject {
   }
 }
 
-impl ToJsonApi for Vec<(User, Option<Post>)> {
+impl<T, U> ToJsonApi for Vec<(T, Option<U>)>
+where T: ToResourceObject + Default, U: ToResourceObject
+{
   fn serialize(&self) -> String {
-    let mut current_user = &User {id: -1, name: "".to_string(), email: None};
-    let mut json_data: Vec<ResourceObject<&User>> = vec!();
-    let mut current_json_data = current_user.to_resource_object();
-    let mut included: Vec<ResourceObject<&Post>> = vec!();
+    let mut current_record: &T = &Default::default();
+    let mut json_data: Vec<ResourceObject<&T>> = vec!();
+    let mut current_json_data = current_record.to_resource_object();
+    let mut included: Vec<ResourceObject<&U>> = vec!();
 
-    for user_post in self {
-      let user = &user_post.0;
-      let post = &user_post.1;
-      let relationship = match *post {
-        Some(ref p) => {
-          included.push(p.to_resource_object());
-          Some(RelationshipObject { _type: "posts".to_string(), id: p.id })
+    for record_tuple in self {
+      let top_level_record = &record_tuple.0;
+      let nested_record = &record_tuple.1;
+      let relationship = match *nested_record {
+        Some(ref nr) => {
+          included.push(nr.to_resource_object());
+          Some(RelationshipObject { _type: nr._type(), id: nr.id() })
         },
         None => None,
       };
 
-      if current_user.id != user.id {
-        if current_user.id != -1 {
+      if current_record.id() != top_level_record.id() {
+        if current_record.id() != -1 {
           json_data.push(current_json_data.clone());
         }
-        current_user = user;
-        current_json_data = user.to_resource_object();
+        current_record = top_level_record;
+        current_json_data = top_level_record.to_resource_object();
       }
       current_json_data.relationships.push(relationship);
     }

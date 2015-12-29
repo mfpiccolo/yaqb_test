@@ -5,7 +5,7 @@ use self::users::dsl::*;
 
 infer_table_from_schema!(dotenv!("DATABASE_URL"), "users");
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, Serialize, Deserialize, RustcDecodable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queriable, Serialize, Deserialize, RustcDecodable, Default)]
 #[changeset_for(users)]
 #[has_many(posts)]
 pub struct User {
