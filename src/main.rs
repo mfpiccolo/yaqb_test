@@ -26,7 +26,6 @@ use to_json_api::*;
 use diesel::*;
 pub use diesel::data_types::*;
 use to_json_api::to_resource_object::ToResourceObject;
-use to_json_api::to_json_string::ToJsonString;
 
 fn main() {
   dotenv::dotenv().ok();
@@ -43,7 +42,9 @@ fn main() {
   // ****** User Routes
   router.get("/users/:user_id", middleware! { |request|
     let user_id = get_user_id(request);
-    User::find(user_id).to_resource_object().to_json_string()
+    serde_json::to_string(
+      &User::find(user_id).to_resource_object()
+    ).unwrap()
   });
 
   router.get("/users/:user_id/posts", middleware! { |request|
@@ -58,7 +59,7 @@ fn main() {
     let user_id = get_user_id(request);
     let changed_user = request.json_as::<User>().unwrap();
     let user: User = User::update(user_id, changed_user);
-    user.to_resource_object().to_json_string()
+    serde_json::to_string(&user.to_resource_object()).unwrap()
   });
 
   router.get("/users", middleware!(User::count().to_string()));
@@ -75,7 +76,7 @@ fn main() {
   // ****** Post Routes
   router.get("/posts/:post_id", middleware! { |request|
     let post_id = request.param("post_id").unwrap().parse::<i32>().unwrap();
-    Post::find(post_id).to_json_string()
+    serde_json::to_string(&Post::find(post_id)).unwrap()
   });
 
   router.get("/posts", middleware!(Post::count().to_string()));

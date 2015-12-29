@@ -1,14 +1,12 @@
-mod resource_object;
+pub mod resource_object;
 mod relationship_object;
 mod document;
 pub mod to_resource_object;
-pub mod to_json_string;
 
 use self::relationship_object::RelationshipObject;
 use self::resource_object::ResourceObject;
 use self::document::Document;
 use self::to_resource_object::ToResourceObject;
-use self::to_json_string::ToJsonString;
 use models::user::User;
 use models::post::Post;
 use serde_json;
@@ -24,7 +22,7 @@ impl<T> ToJsonApi for Vec<T> where T: ToResourceObject {
       data: json_data,
       included: None::<Vec<ResourceObject<&T>>>,
     };
-    cd.to_json_string()
+    serde_json::to_string(&cd).unwrap()
   }
 }
 
@@ -60,6 +58,6 @@ impl ToJsonApi for Vec<(User, Option<Post>)> {
       data: json_data,
       included: Some(included),
     };
-    cd.to_json_string()
+    serde_json::to_string(&cd).unwrap()
   }
 }
