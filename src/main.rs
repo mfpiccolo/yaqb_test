@@ -26,6 +26,7 @@ use to_json_api::*;
 use diesel::*;
 pub use diesel::data_types::*;
 use to_json_api::to_resource_object::ToResourceObject;
+use to_json_api::to_json_string::ToJsonString;
 
 fn main() {
   dotenv::dotenv().ok();
@@ -42,13 +43,13 @@ fn main() {
   // ****** User Routes
   router.get("/users/:user_id", middleware! { |request|
     let user_id = get_user_id(request);
-    User::find(user_id).to_resource_object().to_json()
+    User::find(user_id).to_resource_object().to_json_string()
   });
 
   router.get("/users/:user_id/posts", middleware! { |request|
     let user_id = get_user_id(&request);
     let user = User::find(user_id);
-    user.posts_vec().to_json()
+    user.posts_vec().serialize()
   });
 
   // try it with curl
@@ -57,7 +58,7 @@ fn main() {
     let user_id = get_user_id(request);
     let changed_user = request.json_as::<User>().unwrap();
     let user: User = User::update(user_id, changed_user);
-    user.to_resource_object().to_json()
+    user.to_resource_object().to_json_string()
   });
 
   router.get("/users", middleware!(User::count().to_string()));
@@ -68,13 +69,13 @@ fn main() {
     let new_user = request.json_as::<NewUser>().unwrap();
     let new_users = vec!(new_user);
     let users: Vec<User> = User::insert(new_users);
-    users.to_json()
+    users.serialize()
   });
 
   // ****** Post Routes
   router.get("/posts/:post_id", middleware! { |request|
     let post_id = request.param("post_id").unwrap().parse::<i32>().unwrap();
-    Post::find(post_id).to_json()
+    Post::find(post_id).to_json_string()
   });
 
   router.get("/posts", middleware!(Post::count().to_string()));
@@ -85,12 +86,12 @@ fn main() {
     let new_post = request.json_as::<NewPost>().unwrap();
     let new_posts = vec!(new_post);
     let posts: Vec<Post> = Post::insert(new_posts);
-    posts.to_json()
+    posts.serialize()
   });
 
 
   router.get("/users_and_posts", middleware! {
-    User::users_and_posts().to_json()
+    User::users_and_posts().serialize()
   });
 
   // ******* End Routes
@@ -107,4 +108,3 @@ fn logger<'mw>(req: &mut Request, res: Response<'mw>) -> MiddlewareResult<'mw> {
 fn get_user_id(request: &Request) -> i32 {
   request.param("user_id").unwrap().parse::<i32>().unwrap()
 }
-
