@@ -5,7 +5,7 @@ use self::users::dsl::*;
 
 infer_table_from_schema!(dotenv!("DATABASE_URL"), "users");
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, Serialize, Deserialize, RustcDecodable, Default)]
+#[derive(PartialEq, Eq, Debug, Clone, Queryable, Serialize, Deserialize, RustcDecodable, Default)]
 #[changeset_for(users)]
 #[has_many(posts)]
 pub struct User {
@@ -17,7 +17,7 @@ pub struct User {
 impl User {
 
   pub fn find(_id: i32) -> User {
-    User::conn().find(users, _id).unwrap()
+    users.filter(id.eq(_id)).get_result(&User::conn()).unwrap()
   }
 
   pub fn count() -> i64 {
@@ -37,14 +37,13 @@ impl User {
   }
 
   pub fn users_and_posts() -> Vec<(User, Option<Post>)> {
-    users.left_outer_join(posts::table)
-      .load(&User::conn()).unwrap().collect()
+    users.left_outer_join(posts::table).load(&User::conn()).unwrap().collect()
   }
 }
 
 impl Connectable for User {}
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queryable, RustcDecodable)]
 #[insertable_into(users)]
 pub struct NewUser {
   name: String,
