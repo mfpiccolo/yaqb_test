@@ -2,9 +2,9 @@
 name = "diesel_test"
 version = "0.1.0"
 dependencies = [
- "diesel 0.4.1",
- "diesel_cli 0.4.1",
- "diesel_codegen 0.4.1",
+ "diesel 0.4.1 (git+https://github.com/sgrif/diesel.git)",
+ "diesel_cli 0.4.1 (git+https://github.com/sgrif/diesel)",
+ "diesel_codegen 0.4.1 (git+https://github.com/sgrif/diesel)",
  "dotenv 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "dotenv_macros 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "json_macros 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -103,17 +103,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "diesel"
-version = "0.4.1"
-dependencies = [
- "byteorder 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "pq-sys 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "diesel_cli"
 version = "0.4.1"
+source = "git+https://github.com/sgrif/diesel#b2476d1dba7a69c79c6bcc57103644da55764664"
 dependencies = [
  "chrono 0.2.17 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 1.5.5 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -123,6 +115,7 @@ dependencies = [
 [[package]]
 name = "diesel_codegen"
 version = "0.4.1"
+source = "git+https://github.com/sgrif/diesel#b2476d1dba7a69c79c6bcc57103644da55764664"
 dependencies = [
  "diesel 0.4.1 (git+https://github.com/sgrif/diesel.git)",
 ]
