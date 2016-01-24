@@ -7,7 +7,6 @@ dependencies = [
  "diesel_codegen 0.4.1",
  "dotenv 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "dotenv_macros 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "itertools 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "json_macros 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "nickel 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -96,6 +95,16 @@ dependencies = [
 [[package]]
 name = "diesel"
 version = "0.4.1"
+source = "git+https://github.com/sgrif/diesel.git#b2476d1dba7a69c79c6bcc57103644da55764664"
+dependencies = [
+ "byteorder 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pq-sys 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "diesel"
+version = "0.4.1"
 dependencies = [
  "byteorder 0.3.13 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -115,10 +124,7 @@ dependencies = [
 name = "diesel_codegen"
 version = "0.4.1"
 dependencies = [
- "aster 0.9.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "diesel 0.4.1",
- "quasi 0.3.12 (registry+https://github.com/rust-lang/crates.io-index)",
- "quasi_macros 0.3.12 (registry+https://github.com/rust-lang/crates.io-index)",
+ "diesel 0.4.1 (git+https://github.com/sgrif/diesel.git)",
 ]
 
 [[package]]
@@ -182,11 +188,6 @@ dependencies = [
  "unicase 1.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.2.38 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
-
-[[package]]
-name = "itertools"
-version = "0.4.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "json_macros"

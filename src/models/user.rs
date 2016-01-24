@@ -2,6 +2,7 @@ use diesel::*;
 use models::post::{posts, Post};
 use models::connectable::Connectable;
 use self::users::dsl::*;
+pub use diesel::connection::PgConnection;
 
 infer_table_from_schema!(dotenv!("DATABASE_URL"), "users");
 
@@ -25,7 +26,7 @@ impl User {
   }
 
   pub fn insert(new_users: Vec<NewUser>) -> Vec<User> {
-    User::conn().insert(&users, &new_users).unwrap().collect()
+    insert(&new_users).into(users).get_results(&User::conn()).unwrap().collect::<Vec<User>>()
   }
 
   pub fn update(_id: i32, changed_user: User) -> User {

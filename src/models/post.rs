@@ -2,10 +2,11 @@ use diesel::*;
 use models::user::{users, User};
 use models::connectable::Connectable;
 use self::posts::dsl::*;
+pub use diesel::connection::PgConnection;
 
 infer_table_from_schema!(dotenv!("DATABASE_URL"), "posts");
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, Serialize, Deserialize, Default)]
+#[derive(PartialEq, Eq, Debug, Clone, Queryable, Serialize, Deserialize, Default)]
 #[belongs_to(user)]
 pub struct Post {
   pub id: i32,
@@ -26,7 +27,7 @@ impl Post {
   }
 
   pub fn insert(new_posts: Vec<NewPost>) -> Vec<Post> {
-    Post::conn().insert(&posts, &new_posts).unwrap().collect()
+    insert(&new_posts).into(posts).get_results(&Post::conn()).unwrap().collect()
   }
 
   pub fn new_post(&self, _title: &str, _body: Option<&str>) -> NewPost {
@@ -37,7 +38,7 @@ impl Post {
 
 impl Connectable for Post {}
 
-#[derive(PartialEq, Eq, Debug, Clone, Queriable, RustcDecodable)]
+#[derive(PartialEq, Eq, Debug, Clone, Queryable, RustcDecodable)]
 #[insertable_into(posts)]
 #[changeset_for(posts)]
 #[allow(dead_code)]
